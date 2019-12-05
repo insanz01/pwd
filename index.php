@@ -60,7 +60,12 @@ if (!isset($_SESSION['username'])) {
 				<!-- </div> -->
 			</div>
 		</form>
-		<a href="#" class="btn btn-success mb-2" id="tambah">Create</a>
+		<div class="row">
+			<div class="col-lg-12 mb-2">
+				<a href="#" class="btn btn-success" id="tambah">Create</a>
+				<a href="cetak_lap.php" class="btn btn-danger mx-2">Cetak</a>
+			</div>
+		</div>
 		<div class="row">
 			<div class="col-lg-12">
 				<div id="container">
@@ -77,33 +82,38 @@ if (!isset($_SESSION['username'])) {
 							</tr>
 						</thead>
 						<?php
-						include 'koneksi.php';
-						$query = mysqli_query($conn, "SELECT *FROM mahasiswa ORDER BY nim DESC") or die(mysqli_error($conn));
-						if (mysqli_num_rows($query) == 0) {
+						$file = "mahasiswa.json";
+						$mahasiswa = file_get_contents($file);
+						$datajson = json_decode($mahasiswa, true);
+
+						// include 'koneksi.php';
+						// $query = mysqli_query($conn, "SELECT *FROM mahasiswa ORDER BY nim DESC") or die(mysqli_error($conn));
+						// if (mysqli_num_rows($query) == 0) {
+						// echo '<tbody>
+						// <tr class="active">
+						// <td colspan="5">Tidak ada data yang di entrikan </td>
+						// </tr>
+						// </tbody>';
+						// } else {
+						$no = 1;
+						// while ($data = mysqli_fetch_array($datajson)) {
+						foreach ($datajson as $data) {
 							echo '<tbody>
-						<tr class="active">
-							<td colspan="5">Tidak ada data yang di entrikan </td>
-						</tr>
-					</tbody>';
-						} else {
-							$no = 1;
-							while ($data = mysqli_fetch_assoc($query)) {
-								echo '<tbody>
 						<tr class="active">';
-								echo '<td>' . $data['nim'] . '</td>';
-								echo '<td>' . $data['nama'] . '</td>';
-								echo '<td>' . $data['email'] . '</td>';
-								echo '<td>' . $data['alamat'] . '</td>';
-								echo '<td>' . $data['jkel'] . '</td>';
-								echo '<td>' . $data['tgllhr'] . '</td>';
+							echo '<td>' . $data['nim'] . '</td>';
+							echo '<td>' . $data['nama'] . '</td>';
+							echo '<td>' . $data['email'] . '</td>';
+							echo '<td>' . $data['alamat'] . '</td>';
+							echo '<td>' . $data['jkel'] . '</td>';
+							echo '<td>' . $data['tgllhr'] . '</td>';
 
 
-								echo '<td><a class="btn btn-primary" href="updatemahasiswa.php?nim=' . $data['nim'] . '">Update</a>
+							echo '<td><a class="btn btn-primary" href="updatemahasiswa.php?nim=' . $data['nim'] . '">Update</a>
 						 <a class="btn btn-danger" href="hapusmahasiswa.php?ID=' . $data['nim'] . '">Delete</a></tr>';
-								echo '</tr>';
-								$no++;
-							}
+							echo '</tr>';
+							$no++;
 						}
+						// }
 
 						?>
 					</table>
@@ -118,7 +128,7 @@ if (!isset($_SESSION['username'])) {
 							<h4 class="modal-title">Masukan Data Mahasiswa</h4>
 						</div>
 						<div class="modal-body">
-							<form class="form-horizontal" name="form" id="form" onsubmit="return validasi(this)" action="tambahmahasiswa.php" method="POST">
+							<form class="form-horizontal" name="form" id="form" onsubmit="return validasi(this)" action="insert.php" method="POST">
 								<fieldset>
 									<div class="form-group">
 										<label for="inputEmail" class="col-lg-2 control-label">Nim</label>
